@@ -1,0 +1,31 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/kitnovikov/task-manager#readme",
+  "bugs": {
+    "url": "https://github.com/kitnovikov/task-manager/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kitnovikov/task-manager.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "./src/app.js",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "dev": "node --watch ./src/app.js"
+  },
+  "dependencies": {
+    "@fastify/static": "^9.0.0",
+    "@fastify/view": "^11.1.1",
+    "bootstrap": "^5.3.8",
+    "fastify": "^5.8.2",
+    "pug": "^3.0.4"
+  },
+  "devDependencies": {
+    "fastify-cli": "^7.4.1"
+  }
+}

@@ -1,0 +1,21 @@
+doctype html
+html(lang='ru')
+  head
+    title Менеджер задач
+    link(rel='stylesheet' href='/assets/bootstrap.min.css')
+  body
+    .container
+      header.d-flex.flex-wrap.align-items-center.justify-content-between.py-3.mb-4.border-bottom
+        
+        a.d-flex.align-items-center.col-md-3.mb-2.mb-md-0.text-dark.text-decoration-none(href="/")
+          span.fs-5(href="/") Менеджер задач
+
+        .nav.col-12.col-md-auto.mb-2.justify-content-center.mb-md-0
+          a.nav-link.px-2.link-dark(href="#") Пользователи
+
+        .col-md-3.text-end
+          button.btn.btn-outline-primary.me-2(type="button") Вход
+          button.btn.btn-primary(type="button") Регистрация
+
+      main
+         h1 #{message}
