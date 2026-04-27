@@ -4,10 +4,9 @@ import bcrypt from "bcrypt";
 import BadRequestError from "../errors/badRequest.error.js";
 
 export default class AuthService {
-    constructor(tokenService, userService, authRepository, logger) {
+    constructor(tokenService, userService, logger) {
         this.tokenService = tokenService
         this.userService = userService
-        this.authRepository = authRepository
         this.logger = logger
     }
 

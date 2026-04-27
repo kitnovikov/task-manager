@@ -14,7 +14,7 @@ export default class UserService {
         const user = await this.userRepository.findOne({ id, status: 'Active' })
 
         if (!user) {
-            this.logger.error(`User not found ${id}`)
+            this.logger.error(`User not found "${id}"`)
             throw new NotFoundError('User not found.')
         }
 
@@ -38,7 +38,7 @@ export default class UserService {
         const isUserExist = await this.userRepository.findOne({ email: data.email })
 
         if (isUserExist) {
-            this.logger.error(`User with email: ${data.email} is exist`)
+            this.logger.error(`User with email: "${data.email}" is exist`)
             throw new BadRequestError('User with this email already exists')
         }
 
@@ -70,12 +70,12 @@ export default class UserService {
         const isUserExist = await this.userRepository.findOne({ id, status: 'Active' })
 
         if (!isUserExist) {
-            this.logger.error(`User not found ${id}`)
+            this.logger.error(`User not found "${id}"`)
             throw new NotFoundError('User not found.')
         }
 
         const deletedUser = await this.userRepository.update(id, { status: 'Archived' })
-        this.logger.info(`User deleted ${id}`)
+        this.logger.info(`User deleted "${id}"`)
 
         return deletedUser
     }

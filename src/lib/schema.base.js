@@ -10,5 +10,5 @@ export default class BaseSchema {
         }
     }
 
-    static schemaId = yup.string().required().uuid()
+    // static schemaId = yup.string().required().uuid()
 }

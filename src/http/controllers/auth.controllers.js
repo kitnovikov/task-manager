@@ -1,4 +1,4 @@
-import UnauthorizedError from "../errors/unauthorized.error.js";
+import UnauthorizedError from "../../errors/unauthorized.error.js";
 
 export default class AuthControllers {
     constructor(authService) {

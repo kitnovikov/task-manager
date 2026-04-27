@@ -9,7 +9,7 @@ export default class ConfigService {
         }
 
         if (!parsed) {
-            throw new Error('File is empty');
+            throw new Error('File .env is empty');
         }
 
         this.config = parsed;

@@ -7,8 +7,8 @@ import middie from '@fastify/middie'
 import pug from 'pug'
 import createContainer from "./container.js";
 import ConfigService from "./config/config.service.js";
-import getAllRoutes from './routes/index.js'
-import getAllMiddlewares from './handlers/index.js'
+import getAllRoutes from './http/routes/index.js'
+import getAllMiddlewares from './http/handlers/index.js'
 import Logger from "./logger/logger.js";
 
 class App {
