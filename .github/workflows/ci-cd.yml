@@ -23,6 +23,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install modules
         run: npm install
+      - name: Create env file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
       - name: Generate Prisma Client
         run: npm run generate
       - name: Start Server
