@@ -1,0 +1,33 @@
+name: CI/CD Task manager
+
+on: [ push ]
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  JWT_ACCESS_TOKEN: ${{ secrets.JWT_ACCESS_TOKEN }}
+  JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
+  JWT_REFRESH_TOKEN: ${{ secrets.JWT_REFRESH_TOKEN }}
+  JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ '25.x' ]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install modules
+        run: npm install
+      - name: Create env file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+      - name: Generate Prisma Client
+        run: npm run generate
+      - name: Start Server
+        run: npm run start
+      - name: Unit-tests
+        run: npm run test:unit

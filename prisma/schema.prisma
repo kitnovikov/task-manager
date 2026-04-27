@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String     @id @default(uuid())
+  firstName String
+  lastName  String
+  status    UserStatus @default(Active)
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+enum UserStatus {
+  Active
+  Archived
+
+  @@map("user_status")
+}
+
+model Token {
+  userId       String   @id
+  refreshToken String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tokens")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdBy   String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model TaskStatus {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  projectId   String   @map("project_id")
+  createdBy   String   @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("task_statuses")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  statusId    String   @map("status_id")
+  projectId   String   @map("project_id")
+  executorId  String   @map("executor_id")
+  createdBy   String   @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}
+
+model Participants {
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("participants")
+}
