@@ -6,7 +6,7 @@ export default class AuthRoutes {
 
     register() {
         this.app
-            .post('/signin', this.authControllers.signIn.bind(this.authControllers))
-            .post('/signup', this.authControllers.signUp.bind(this.authControllers))
+            .post('/api/signin', this.authControllers.login.bind(this.authControllers))
+            .post('/api/signup', this.authControllers.registration.bind(this.authControllers))
     }
 }

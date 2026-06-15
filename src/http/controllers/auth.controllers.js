@@ -1,23 +1,25 @@
-import UnauthorizedError from "../../errors/unauthorized.error.js";
+import {removeSpaces} from "../../utils.js";
+import RegisterUserRequestDto from "../../auth/dto/auth/register.user.request.dto.js";
+import RegistrationResponseDto from "../../auth/dto/auth/registration.response.dto.js";
+import TokensResponseDto from "../../auth/dto/tokens/tokens.response.dto.js";
+import LoginRequestDto from "../../auth/dto/auth/login.request.dto.js";
 
 export default class AuthControllers {
     constructor(authService) {
         this.authService = authService
     }
 
-    async signIn(req, res) {
-        const { email, password } = req.body
+    async login(req, res) {
+        const tokens = await this.authService.login(new LoginRequestDto(req.body))
 
-        const tokens = await this.authService.signIn(email, password)
         res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
-        res.code(200).send({ ...tokens })
+        res.code(200).send(new TokensResponseDto(tokens))
     }
 
-    async signUp(req, res) {
-        const { user, accessToken, refreshToken } = await this.authService.signUp(req.body)
+    async registration(req, res) {
+        const result = await this.authService.registration(new RegisterUserRequestDto(req.body))
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
-        // res.session.userId = user.id
-        res.code(201).send({ user, accessToken, refreshToken })
+        res.cookie('refreshToken', result.tokens.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
+        res.code(201).send(new RegistrationResponseDto(result))
     }
 }

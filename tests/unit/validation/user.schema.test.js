@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import UserSchema from "../../../src/validation/user.schema.js";
+import UserSchema from "../../../src/auth/validation/user.schema.js";
 import ValidationError from "../../../src/errors/validation.error.js";
 
 describe('UserSchema.createUserSchema - decision table (optimized with test.each)', () => {
@@ -10,7 +10,7 @@ describe('UserSchema.createUserSchema - decision table (optimized with test.each
         password: 'Abcdef1!'
     }
 
-    const validate = async (data) => UserSchema.validator(UserSchema.createUserSchema, data)
+    const validate = async (data) => UserSchema.validator(UserSchema.userRegistrationSchema, data)
 
     const expectSuccess = async (data) => {
         const result = await validate(data)

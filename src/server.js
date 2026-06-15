@@ -9,12 +9,13 @@ import createContainer from "./container.js";
 import ConfigService from "./config/config.service.js";
 import getAllRoutes from './http/routes/index.js'
 import getAllMiddlewares from './http/handlers/index.js'
-import Logger from "./logger/logger.js";
+import Logger from "./logging/logger.js";
 
 class App {
     constructor(config) {
         this.config = config
         this.logger = new Logger()
+        this.host = this.config.get('HOST')
         this.port = this.config.get('PORT')
         this.app = fastify()
 
@@ -22,7 +23,7 @@ class App {
     }
 
     registerDependencies() {
-        this.logger.debug('Installing server dependencies is in progress')
+        this.logger.info('Installing server dependencies is in progress')
 
         this.registerContainer()
         this.registerPlugins() // решить, как использовать await
@@ -59,9 +60,15 @@ class App {
     }
 
     listen() {
-        this.app.listen({ port: this.port }, () => {
-            this.logger.debug(`Application launched at the address: http://localhost:${this.port}`)
-        })
+        try {
+            this.app.listen({ port: this.port }, () => {
+                this.logger.info(`Application launched at the address: ${this.host}:${this.port}`)
+            })
+        } catch (error) {
+            this.logger.fatal('Server error', {
+                err: error
+            })
+        }
     }
 }
 

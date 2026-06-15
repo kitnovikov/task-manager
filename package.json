@@ -1,16 +1,11 @@
 {
   "name": "task-manager",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "start": "node ./src/server.js",
     "start:dev": "nodemon ./src/server.js",
     "generate": "prisma generate",
-    "test:unit": "jest ./tests/unit/"
+    "test:api": "jest tests/api/**"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
@@ -21,6 +16,7 @@
     "@jest/globals": "^30.3.0",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "allure-js-commons": "^3.7.2",
     "bcrypt": "^6.0.0",
     "bottlejs": "^2.0.1",
     "dotenv": "^17.4.1",
@@ -29,11 +25,14 @@
     "pg": "^8.20.0",
     "pino": "^10.3.1",
     "pug": "^3.0.4",
+    "resend": "^6.12.4",
     "yup": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.2",
+    "@faker-js/faker": "^10.4.0",
+    "axios": "^1.15.2",
     "babel-jest": "^30.3.0",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
