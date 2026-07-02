@@ -11,6 +11,10 @@ export default class UserEntity {
         this.updatedAt = data.updatedAt
     }
 
+    isActive() {
+        return this.status === 'Active'
+    }
+
     isVerified() {
         return Boolean(this.emailVerifiedAt)
     }

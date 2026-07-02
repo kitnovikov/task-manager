@@ -1,12 +1,13 @@
-import {removeSpaces} from "../../utils.js";
 import RegisterUserRequestDto from "../../auth/dto/auth/register.user.request.dto.js";
 import RegistrationResponseDto from "../../auth/dto/auth/registration.response.dto.js";
 import TokensResponseDto from "../../auth/dto/tokens/tokens.response.dto.js";
 import LoginRequestDto from "../../auth/dto/auth/login.request.dto.js";
+import EmailActivateTokenDto from "../../auth/dto/mail/email.activate.token.dto.js";
 
 export default class AuthControllers {
-    constructor(authService) {
+    constructor(authService, emailConfirmationService) {
         this.authService = authService
+        this.emailConfirmationService = emailConfirmationService
     }
 
     async login(req, res) {

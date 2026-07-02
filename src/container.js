@@ -14,11 +14,12 @@ import PrismaUserRepository from "./auth/repositories/prisma.user.repository.js"
 import TokenService from "./auth/services/token.service.js";
 import UserService from "./auth/services/user.service.js";
 import AuthService from "./auth/services/auth.service.js";
+import EmailConfirmationService from "./auth/services/email.confirmation.service.js";
 
 // Controllers
 import AuthControllers from "./http/controllers/auth.controllers.js";
 import UserControllers from "./http/controllers/user.controllers.js";
-import EmailConfirmationService from "./auth/services/email.confirmation.service.js";
+import EmailConfirmationController from "./http/controllers/email-confirmation.controller.js";
 
 const createContainer = (config, logger) => {
     const bottle = new Bottle()
@@ -35,12 +36,13 @@ const createContainer = (config, logger) => {
     // Services
     bottle.factory('tokenService', (container) => new TokenService(config, container.tokenRepository, logger))
     bottle.factory('userService', (container) => new UserService(container.userRepository, logger))
-    bottle.factory('mailService', (container) => new EmailConfirmationService(config, new SMTPService(config, logger), logger))
-    bottle.factory('authService', (container) => new AuthService(container.tokenService, container.userService, container.mailService, logger))
+    bottle.factory('emailConfirmationService', (container) => new EmailConfirmationService(config, new SMTPService(config, logger), container.userService, logger))
+    bottle.factory('authService', (container) => new AuthService(container.tokenService, container.userService, container.emailConfirmationService, logger))
 
     // Controllers
-    bottle.factory('authControllers', (container) => new AuthControllers(container.authService))
+    bottle.factory('authControllers', (container) => new AuthControllers(container.authService, container.emailConfirmationService))
     bottle.factory('userControllers', (container) => new UserControllers(container.userService))
+    bottle.factory('emailConfirmationControllers', (container) => new EmailConfirmationController(container.emailConfirmationService))
 
     return bottle.container
 }

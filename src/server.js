@@ -17,7 +17,13 @@ class App {
         this.logger = new Logger()
         this.host = this.config.get('HOST')
         this.port = this.config.get('PORT')
-        this.app = fastify()
+        this.options = {
+            routerOptions: {
+                maxParamLength: 1000,
+            },
+        }
+
+        this.app = fastify(this.options)
 
         this.registerDependencies()
     }

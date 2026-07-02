@@ -2,6 +2,7 @@ import UserSchema from "../validation/user.schema.js";
 import BadRequestError from "../../errors/badRequest.error.js";
 import { encrypt } from "../../utils.js";
 import CreateUserDto from "../dto/user/create-user.dto.js";
+import NotFoundError from "../../errors/notFound.error.js";
 
 export default class UserService {
     constructor(userRepository, logger) {
@@ -9,20 +10,43 @@ export default class UserService {
         this.logger = logger
     }
 
-    // async getUserById(id) {
-    //     await UserSchema.validator(UserSchema.schemaId, id)
-    //     const user = await this.userRepository.findOne({ id, status: 'Active' })
-    //
-    //     if (!user) {
-    //         this.logging.error(`User not found "${id}"`)
-    //         throw new NotFoundError('User not found')
-    //     }
-    //
-    //     return user
-    // }
+    async getUserById(id) {
+        await UserSchema.validator(UserSchema.id, id)
 
-    async getUserByEmailForAuth(email) {
-        return this.userRepository.findByEmail(email)
+        const user = await this.userRepository.findById(id)
+
+        if (!user) {
+            this.logger.debug(`User not found "${id}"`, {
+                service: 'get-user-by-id'
+            })
+            throw new NotFoundError('User not found')
+        }
+
+        this.logger.debug(`User found "${id}"`, {
+            service: 'get-user-by-id'
+        })
+
+        return user
+    }
+
+    async getUserByEmail(email) {
+        const user = await this.userRepository.findByEmail(email)
+
+        if (!user) {
+            this.logger.debug('User not found', {
+                email: email,
+                service: 'get-user-by-email'
+            })
+
+            throw new NotFoundError('User not found')
+        }
+
+        this.logger.debug(`User found`, {
+            email: email,
+            service: 'get-user-by-email'
+        })
+
+        return user
     }
 
     async createUser(data) {
@@ -54,21 +78,17 @@ export default class UserService {
         return newUser
     }
 
-    // async updateById(id, data) {
-    //     await UserSchema.validator(UserSchema.updateUserSchema, { id, ...data })
-    //
-    //     const isUserExist = await this.userRepository.findOne({ id, status: 'Active' })
-    //     if (!isUserExist) {
-    //         throw new NotFoundError('User not found')
-    //     }
-    //
-    //     if (data.password) {
-    //         data.password = await encrypt(data.password)
-    //     }
-    //
-    //     return this.userRepository.update(id, data)
-    // }
-    //
+    async update(id, data) {
+        // await UserSchema.validator(UserSchema.updateUserSchema, { id, ...data })
+
+        const isUserExist = await this.userRepository.findById(id)
+        if (!isUserExist) {
+            throw new NotFoundError('User not found')
+        }
+
+        return this.userRepository.update(id, data)
+    }
+
     // async deleteById(id) {
     //     await UserSchema.validator(UserSchema.schemaId, id)
     //

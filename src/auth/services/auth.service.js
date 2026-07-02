@@ -29,30 +29,20 @@ export default class AuthService {
             throw new InternalServerError()
         }
 
-        this.mailService.sendActivationMail(user)
+        this.mailService.sendVerificationToken(user)
 
         return { user, tokens }
     }
 
     async login(data) {
-        const user = await this.userService.getUserByEmailForAuth(data.email)
+        const user = await this.userService.getUserByEmail(data.email)
 
-        if (!user) {
-            this.logger.info('User not found', {
-                email: data.email,
-                service: 'user-authentification'
-            })
-            throw new BadRequestError('Email or password incorrect')
-        }
-
-        this.logger.debug(`User with email "${data.email}" found`, {
-            service: 'user-authentification'
-        })
+        // throw new BadRequestError('Email or password incorrect')
 
         const isPasswordsEquals = await bcrypt.compare(data.password, user.password)
 
         if (!isPasswordsEquals) {
-            this.logger.info('Password incorrect', {
+            this.logger.debug('Password incorrect', {
                 email: data.email,
                 service: 'user-authentification'
             })

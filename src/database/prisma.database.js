@@ -26,7 +26,7 @@ export default class PrismaDatabase {
         }
 
         this.client.$on('query', (event) => {
-            this.logger.info('Database query', {
+            this.logger.debug('Database query', {
                 query: event.query,
                 params: event.params,
                 duration: event.duration,

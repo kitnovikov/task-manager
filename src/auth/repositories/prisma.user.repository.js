@@ -32,6 +32,7 @@ export default class PrismaUserRepository {
                 lastName: true,
                 email: true,
                 password: true,
+                status: true,
                 emailVerifiedAt: true,
                 createdAt: true,
                 updatedAt: true,
@@ -57,20 +58,23 @@ export default class PrismaUserRepository {
         return toDomain(user)
     }
 
-    // async update(id, props) {
-    //     const user = await this.database.client.user.update({
-    //         select: {
-    //             id: true,
-    //             firstName: true,
-    //             lastName: true,
-    //             email: true,
-    //             createdAt: true,
-    //             updatedAt: true
-    //         },
-    //         where: { id },
-    //         data: { ...props }
-    //     })
-    //
-    //     return toDomain(user)
-    // }
+    async update(id, data) {
+        const user = await this.database.client.user.update({
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                password: true,
+                status: true,
+                emailVerifiedAt: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+            where: { id },
+            data: data
+        })
+
+        return toDomain(user)
+    }
 }
