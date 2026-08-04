@@ -1,0 +1,5 @@
+enum WorkspaceMemberStatus {
+  Active
+  Invited
+  Removed
+}

@@ -1,0 +1,26 @@
+model Workspace {
+  id          String          @id @default(uuid())
+  name        String
+  slug        String          @unique
+  description String
+  status      WorkspaceStatus @default(Active)
+
+  ownerId String @map("owner_id")
+  owner   User   @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedBy   String? @map("updated_by")
+  userUpdater User?   @relation("WorkspaceUpdater", fields: [updatedBy], references: [id])
+
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  archivedAt DateTime? @map("archived_at")
+
+  archivedBy   String? @map("archived_by")
+  userArchiver User?   @relation("WorkspaceArchiver", fields: [archivedBy], references: [id])
+
+  members WorkspaceMember[]
+
+  @@map("workspaces")
+}

@@ -1,4 +1,4 @@
-import routes from './routes.js'
+import routes from './routes.js';
 
 export default class EmailConfirmationRoutes {
     constructor(app) {
@@ -8,6 +8,9 @@ export default class EmailConfirmationRoutes {
 
     register() {
         this.app
-            .post(routes.emailConfirmation.activeVerificationToken, this.emailConfirmationControllers.activateEmail.bind(this.emailConfirmationControllers))
+            .post(
+                routes.emailConfirmation.activeVerificationToken,
+                this.emailConfirmationControllers.activateEmail.bind(this.emailConfirmationControllers)
+            )
     }
 }

@@ -1,0 +1,129 @@
+doctype html
+html(lang="ru")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Создать проект
+        link(
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+            rel="stylesheet"
+        )
+        style.
+            body {
+                min-height: 100vh;
+                background:
+                    radial-gradient(circle at bottom right, rgba(25, 135, 84, .14), transparent 32rem),
+                    linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
+            }
+
+            .page-card {
+                border-radius: 1rem;
+            }
+
+            .brand-mark {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+    body
+        nav.navbar.navbar-expand-lg.bg-white.border-bottom
+            .container
+                a.navbar-brand.d-flex.align-items-center.gap-2.fw-bold(href="/")
+                    span.brand-mark.bg-primary.bg-opacity-10.text-primary.rounded-circle.d-inline-flex.align-items-center.justify-content-center T
+                    | Task Manager
+
+                .d-flex.gap-2
+                    a.btn.btn-outline-primary(href="/projects") К проектам
+                    button#logoutBtn.btn.btn-outline-danger(type="button") Выйти
+
+        main.container.py-5
+            .row.justify-content-center
+                .col-12.col-lg-7
+                    .card.page-card.border-0.shadow-sm
+                        .card-body.p-4.p-md-5
+                            p.text-success.fw-semibold.mb-2 Новый проект
+                            h1.h2.fw-bold.mb-2 Создать проект
+                            p.text-secondary.mb-4 Укажите название и короткое описание проекта.
+
+                            form#createProjectForm
+                                .mb-3
+                                    label.form-label(for="name") Название
+                                    input#name.form-control(
+                                        type="text",
+                                        name="name",
+                                        minlength="3",
+                                        maxlength="30",
+                                        required
+                                    )
+                                .mb-4
+                                    label.form-label(for="description") Описание
+                                    textarea#description.form-control(
+                                        name="description",
+                                        rows="5",
+                                        minlength="3",
+                                        maxlength="100",
+                                        required
+                                    )
+                                .d-flex.flex-column.flex-sm-row.gap-2
+                                    button.btn.btn-success(type="submit") Создать
+                                    a.btn.btn-outline-secondary(href="/projects") Отмена
+
+                            .alert.mt-4.mb-0.d-none#createProjectMessage(role="alert")
+
+        script.
+            const createProjectForm = document.getElementById('createProjectForm')
+            const createProjectMessage = document.getElementById('createProjectMessage')
+            const logoutBtn = document.getElementById('logoutBtn')
+
+            const getAccessToken = () => localStorage.getItem('accessToken')
+
+            if (!getAccessToken()) {
+                window.location.replace('/')
+            }
+
+            const setMessage = (type, message) => {
+                createProjectMessage.className = `alert alert-${type} mt-4 mb-0`
+                createProjectMessage.textContent = message
+            }
+
+            createProjectForm.addEventListener('submit', async (event) => {
+                event.preventDefault()
+
+                const formData = new FormData(createProjectForm)
+
+                try {
+                    const response = await fetch('/api/projects', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${getAccessToken()}`,
+                        },
+                        body: JSON.stringify({
+                            name: formData.get('name'),
+                            description: formData.get('description'),
+                        }),
+                    })
+
+                    const payload = await response.json()
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            localStorage.removeItem('accessToken')
+                            localStorage.removeItem('refreshToken')
+                            window.location.replace('/')
+                        }
+
+                        throw new Error(payload.message ?? 'Не удалось создать проект')
+                    }
+
+                    setMessage('success', 'Проект создан. Сейчас откроется список проектов.')
+                    setTimeout(() => window.location.assign('/projects'), 500)
+                } catch (error) {
+                    setMessage('danger', error.message)
+                }
+            })
+
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+                window.location.replace('/')
+            })

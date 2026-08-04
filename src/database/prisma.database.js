@@ -4,7 +4,7 @@ import { Pool } from "pg";
 
 export default class PrismaDatabase {
     constructor(config, logger) {
-        this.logger = logger // .setModule(this.constructor.name)
+        this.logger = logger
         const connectionString = config.get('DATABASE_URL')
         
         this.pool = new Pool({connectionString})
@@ -35,11 +35,28 @@ export default class PrismaDatabase {
         })
 
         this.client.$on('error', (event) => {
-            this.logger.error('Database error', { error: event });
+            this.logger.error('Database error', {
+                err: event,
+                service: 'prisma-database',
+            });
         })
 
         this.client.$on('warn', (event) => {
-            this.logger.warn('Database warning', { error: event });
+            this.logger.warn('Database warning', {
+                warning: event,
+                service: 'prisma-database',
+            });
         })
+    }
+
+    transaction(callback) {
+        try {
+            return this.client.$transaction(callback)
+        } catch (error) {
+            this.logger.error('Database transaction error', {
+                err: error,
+                service: 'prisma-database',
+            })
+        }
     }
 }

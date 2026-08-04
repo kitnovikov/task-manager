@@ -1,0 +1,8 @@
+model Token {
+  userId       String   @id
+  refreshToken String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tokens")
+}

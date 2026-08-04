@@ -1,4 +1,4 @@
-import ValidationError from "../errors/validation.error.js";
+import ValidationError from "../http/errors/validation.error.js";
 
 export default class BaseSchema {
      static async validator(schema, data) {

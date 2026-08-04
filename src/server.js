@@ -1,10 +1,12 @@
 import fastify from "fastify"
+import crypto from 'node:crypto'
 import formbody from '@fastify/formbody'
 import view from '@fastify/view'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
 import middie from '@fastify/middie'
 import pug from 'pug'
+import path from 'node:path'
 import createContainer from "./container.js";
 import ConfigService from "./config/config.service.js";
 import getAllRoutes from './http/routes/index.js'
@@ -18,6 +20,7 @@ class App {
         this.host = this.config.get('HOST')
         this.port = this.config.get('PORT')
         this.options = {
+            genReqId: (req) => crypto.randomUUID(),
             routerOptions: {
                 maxParamLength: 1000,
             },
@@ -29,7 +32,9 @@ class App {
     }
 
     registerDependencies() {
-        this.logger.info('Installing server dependencies is in progress')
+        this.logger.info('Installing server dependencies is in progress', {
+            service: 'server',
+        })
 
         this.registerContainer()
         this.registerPlugins() // решить, как использовать await
@@ -39,7 +44,10 @@ class App {
 
     registerPlugins() {
         this.app.register(formbody)
-        this.app.register(view, { engine: { pug } })
+        this.app.register(view, {
+            engine: { pug },
+            root: path.resolve('src/http/views'),
+        })
         this.app.register(fastifyCookie)
         // this.app.register(fastifySession, {
         //     secret: 'a secret with minimum length of 32 characters',
@@ -65,14 +73,18 @@ class App {
         }
     }
 
-    listen() {
+    async listen() {
         try {
-            this.app.listen({ port: this.port }, () => {
-                this.logger.info(`Application launched at the address: ${this.host}:${this.port}`)
+            await this.app.listen({ port: this.port })
+            this.logger.info('Application launched', {
+                host: this.host,
+                port: this.port,
+                service: 'server',
             })
         } catch (error) {
             this.logger.fatal('Server error', {
-                err: error
+                err: error,
+                service: 'server',
             })
         }
     }
@@ -80,4 +92,4 @@ class App {
 
 const app = await new App(new ConfigService())
 
-app.listen()
+await app.listen()

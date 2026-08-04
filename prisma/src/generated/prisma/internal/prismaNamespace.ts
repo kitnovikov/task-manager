@@ -671,7 +671,7 @@ export type PrismaClientOptions = ({
    */
   omit?: GlobalOmitConfig
   /**
-   * SQL commenter plugins that add metadata to SQL queries as comments.
+   * SQL commenter plugins that add metadata to SQL criteria as comments.
    * Comments follow the sqlcommenter format: https://google.github.io/sqlcommenter/
    * 
    * @example

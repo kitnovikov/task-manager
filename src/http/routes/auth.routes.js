@@ -1,4 +1,4 @@
-import routes from './routes.js'
+import routes from './routes.js';
 
 export default class AuthRoutes {
     constructor(app) {
@@ -8,7 +8,13 @@ export default class AuthRoutes {
 
     register() {
         this.app
-            .post(routes.auth.login, this.authControllers.login.bind(this.authControllers))
-            .post(routes.auth.registration, this.authControllers.registration.bind(this.authControllers))
+            .post(
+                routes.auth.login,
+                this.authControllers.login.bind(this.authControllers)
+            )
+            .post(
+                routes.auth.registration,
+                this.authControllers.registration.bind(this.authControllers)
+            )
     }
 }

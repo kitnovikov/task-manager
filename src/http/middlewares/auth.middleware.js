@@ -1,4 +1,4 @@
-import UnauthorizedError from "../../errors/unauthorized.error.js";
+import UnauthorizedError from "../errors/unauthorized.error.js";
 
 const authMiddleware = (app) => {
     const { tokenService, logger } = app.container
@@ -7,20 +7,40 @@ const authMiddleware = (app) => {
         const authHeader = req.headers.authorization
 
         if (!authHeader || !authHeader.startsWith('Bearer')) {
-            throw new UnauthorizedError('Authentication required')
+            logger.warn('Authorization header is missing or invalid', {
+                method: req.method,
+                url: req.url,
+                service: 'auth-middleware',
+            })
+            throw new UnauthorizedError('Требуется авторизация')
         }
 
         const accessToken = authHeader.split(' ')[1]
         if (!accessToken) {
-            throw new UnauthorizedError('Access token is missing')
+            logger.warn('Access token is missing', {
+                method: req.method,
+                url: req.url,
+                service: 'auth-middleware',
+            })
+            throw new UnauthorizedError('Токен доступа отсутствует')
         }
 
         const payload = tokenService.verifyAccessToken(accessToken)
         if (!payload) {
-            throw new UnauthorizedError('Invalid or expired access token')
+            logger.warn('Access token is invalid or expired', {
+                method: req.method,
+                url: req.url,
+                service: 'auth-middleware',
+            })
+            throw new UnauthorizedError('Токен доступа недействителен или истек')
         }
 
-        logger.info(`Verify access token for user ${payload.id}`)
+        logger.debug('Access token verified', {
+            userId: payload.id,
+            method: req.method,
+            url: req.url,
+            service: 'auth-middleware',
+        })
         req.user = payload
         next()
     }

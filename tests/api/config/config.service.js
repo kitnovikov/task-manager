@@ -2,7 +2,9 @@ import { config } from "dotenv";
 
 export default class ConfigService {
     constructor() {
-        const { parsed, error } = config();
+        const { parsed, error } = config({
+            path: '.env.test'
+        });
 
         if (error) {
             throw new Error('File .env not found');

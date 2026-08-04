@@ -1,0 +1,4 @@
+enum WorkspaceStatus {
+  Active
+  Archived
+}

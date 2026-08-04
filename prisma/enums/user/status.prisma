@@ -1,0 +1,6 @@
+enum UserStatus {
+  Active
+  Archived
+
+  @@map("user_status")
+}

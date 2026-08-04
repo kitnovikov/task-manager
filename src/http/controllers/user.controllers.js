@@ -24,6 +24,6 @@ export default class UserControllers {
 
         await this.userService.deleteById(id)
 
-        res.code(200).send({ statusCode: 200, message: 'User deleted successfully.' })
+        res.code(200).send({ statusCode: 200, message: 'Пользователь успешно удален.' })
     }
 }
